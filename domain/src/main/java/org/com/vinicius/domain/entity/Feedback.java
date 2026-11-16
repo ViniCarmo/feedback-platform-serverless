@@ -1,6 +1,6 @@
-package domain.entity;
+package org.com.vinicius.domain.entity;
 
-import domain.exception.InvalidFeedbackException;
+import org.com.vinicius.domain.exception.InvalidFeedbackException;
 
 import java.time.Instant;
 import java.util.UUID;

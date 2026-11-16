@@ -1,6 +1,6 @@
-package domain.gateway;
+package org.com.vinicius.domain.gateway;
 
-import domain.entity.Feedback;
+import org.com.vinicius.domain.entity.Feedback;
 
 public interface FeedbackEventPublisher {
     void publishCritical(Feedback feedback);

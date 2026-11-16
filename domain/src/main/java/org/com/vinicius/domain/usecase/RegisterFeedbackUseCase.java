@@ -1,8 +1,8 @@
-package domain.usecase;
+package org.com.vinicius.domain.usecase;
 
-import domain.entity.Feedback;
-import domain.gateway.FeedbackEventPublisher;
-import domain.gateway.FeedbackRepository;
+import org.com.vinicius.domain.entity.Feedback;
+import org.com.vinicius.domain.gateway.FeedbackEventPublisher;
+import org.com.vinicius.domain.gateway.FeedbackRepository;
 
 import java.time.Clock;
 

@@ -1,6 +1,6 @@
-package domain.entity;
+package org.com.vinicius.domain.entity;
 
-import domain.exception.InvalidFeedbackException;
+import org.com.vinicius.domain.exception.InvalidFeedbackException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

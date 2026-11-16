@@ -1,8 +1,8 @@
 package org.com.vinicius.receivefeedback.config;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Singleton;
-import jakarta.ws.rs.Produces;
 import org.com.vinicius.domain.gateway.FeedbackEventPublisher;
 import org.com.vinicius.domain.gateway.FeedbackRepository;
 import org.com.vinicius.domain.usecase.RegisterFeedbackUseCase;

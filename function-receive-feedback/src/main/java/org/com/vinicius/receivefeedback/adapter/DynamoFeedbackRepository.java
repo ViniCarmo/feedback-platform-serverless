@@ -22,7 +22,7 @@ public class DynamoFeedbackRepository implements FeedbackRepository {
     private final String tableName;
 
     @Inject
-    public DynamoFeedbackRepository(DynamoDbClient dynamoDb, @ConfigProperty(name = "feedback.table.name") String tableName) {
+    public DynamoFeedbackRepository(DynamoDbClient dynamoDb, @ConfigProperty(name = "feedback.table-name") String tableName) {
         this.dynamoDb = dynamoDb;
         this.tableName = tableName;
     }

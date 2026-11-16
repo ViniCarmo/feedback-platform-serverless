@@ -6,6 +6,7 @@ import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import org.com.vinicius.domain.entity.Feedback;
 import org.com.vinicius.domain.usecase.NotifyCriticalFeedbackUseCase;
 import org.com.vinicius.notifycritical.dto.CriticalFeedbackEvent;
@@ -14,6 +15,7 @@ import org.jboss.logging.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+@Named("notifyCriticalFeedback")
 public class NotifyCriticalFeedbackHandler implements RequestHandler<SQSEvent, SQSBatchResponse> {
     private static final Logger LOG = Logger.getLogger(NotifyCriticalFeedbackHandler.class);
 

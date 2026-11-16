@@ -1,10 +1,12 @@
 package org.com.vinicius.receivefeedback.dto;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import org.com.vinicius.domain.entity.Feedback;
 
 import java.time.Instant;
 import java.util.UUID;
 
+@RegisterForReflection
 public record CriticalFeedbackEvent(UUID id,
                                     String description,
                                     int score,

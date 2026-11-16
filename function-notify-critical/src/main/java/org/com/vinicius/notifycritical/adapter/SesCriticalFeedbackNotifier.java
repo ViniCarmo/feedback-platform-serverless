@@ -36,7 +36,7 @@ public class SesCriticalFeedbackNotifier implements CriticalFeedbackNotifier {
         String subject = "[URGENT] New critical review received";
         String body = """
                 A critical review has been received on the feedback platform.
-
+                
                 Description: %s
                 Score: %d
                 Urgency: %s
@@ -59,5 +59,5 @@ public class SesCriticalFeedbackNotifier implements CriticalFeedbackNotifier {
                                 .build())
                         .build())
                 .build());
-}
+    }
 }

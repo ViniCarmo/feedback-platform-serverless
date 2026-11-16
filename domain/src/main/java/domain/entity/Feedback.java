@@ -1,6 +1,6 @@
-package entity;
+package domain.entity;
 
-import exception.InvalidFeedbackException;
+import domain.exception.InvalidFeedbackException;
 
 import java.time.Instant;
 import java.util.UUID;

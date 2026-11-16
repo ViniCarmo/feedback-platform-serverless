@@ -10,6 +10,7 @@
     <modules>
         <module>domain</module>
         <module>function-receive-feedback</module>
+        <module>function-notify-critical</module>
     </modules>
 
     <properties>

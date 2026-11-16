@@ -1,10 +1,10 @@
-package usecase;
+package domain.usecase;
 
-import entity.Feedback;
-import entity.Urgency;
-import exception.InvalidFeedbackException;
-import gateway.FeedbackEventPublisher;
-import gateway.FeedbackRepository;
+import domain.entity.Feedback;
+import domain.entity.Urgency;
+import domain.exception.InvalidFeedbackException;
+import domain.gateway.FeedbackEventPublisher;
+import domain.gateway.FeedbackRepository;
 import org.junit.jupiter.api.Test;
 
 import java.time.Clock;

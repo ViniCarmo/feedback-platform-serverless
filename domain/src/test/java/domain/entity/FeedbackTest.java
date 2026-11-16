@@ -1,8 +1,6 @@
 package domain.entity;
 
-import entity.Feedback;
-import entity.Urgency;
-import exception.InvalidFeedbackException;
+import domain.exception.InvalidFeedbackException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;

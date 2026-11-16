@@ -1,8 +1,8 @@
-package usecase;
+package domain.usecase;
 
-import entity.Feedback;
-import gateway.FeedbackEventPublisher;
-import gateway.FeedbackRepository;
+import domain.entity.Feedback;
+import domain.gateway.FeedbackEventPublisher;
+import domain.gateway.FeedbackRepository;
 
 import java.time.Clock;
 

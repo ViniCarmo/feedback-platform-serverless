@@ -1,6 +1,6 @@
-package gateway;
+package domain.gateway;
 
-import entity.Feedback;
+import domain.entity.Feedback;
 
 public interface FeedbackEventPublisher {
     void publishCritical(Feedback feedback);

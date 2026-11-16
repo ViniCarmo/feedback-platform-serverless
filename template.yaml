@@ -2,6 +2,14 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Feedback platform - serverless (FIAP Tech Challenge 4)
 
+Parameters:
+  SenderEmail:
+    Type: String
+    Description: E-mail remetente, verificado no SES
+  RecipientEmails:
+    Type: String
+    Description: E-mails dos administradores, separados por virgula
+
 Globals:
   Function:
     Runtime: java21
@@ -92,6 +100,78 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: /aws/lambda/receive-feedback
+      RetentionInDays: 14
+
+  # ---------- Fila de avaliações críticas ----------
+  CriticalFeedbackDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      MessageRetentionPeriod: 1209600
+      SqsManagedSseEnabled: true
+
+  CriticalFeedbackQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 90
+      SqsManagedSseEnabled: true
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt CriticalFeedbackDLQ.Arn
+        maxReceiveCount: 3
+
+  CriticalFeedbackQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref CriticalFeedbackQueue
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: sns.amazonaws.com
+            Action: sqs:SendMessage
+            Resource: !GetAtt CriticalFeedbackQueue.Arn
+            Condition:
+              ArnEquals:
+                aws:SourceArn: !Ref CriticalFeedbackTopic
+
+  CriticalFeedbackSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref CriticalFeedbackTopic
+      Protocol: sqs
+      Endpoint: !GetAtt CriticalFeedbackQueue.Arn
+      RawMessageDelivery: true
+
+  # ---------- Função: notify-critical ----------
+  NotifyCriticalFeedbackFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: notify-critical-feedback
+      CodeUri: function-notify-critical/target/function.zip
+      Environment:
+        Variables:
+          NOTIFICATION_SENDER_EMAIL: !Ref SenderEmail
+          NOTIFICATION_RECIPIENT_EMAILS: !Ref RecipientEmails
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+                - ses:SendRawEmail
+              Resource: !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/*
+      Events:
+        CriticalFeedbackMessages:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt CriticalFeedbackQueue.Arn
+            BatchSize: 10
+            FunctionResponseTypes:
+              - ReportBatchItemFailures
+
+  NotifyCriticalFeedbackLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/notify-critical-feedback
       RetentionInDays: 14
 
 Outputs:

@@ -8,8 +8,10 @@ import org.com.vinicius.domain.entity.WeeklyReport;
 import org.com.vinicius.domain.usecase.GenerateWeeklyReportUseCase;
 import org.jboss.logging.Logger;
 
+import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 @Named("generateWeeklyReport")
 public class GenerateWeeklyReportHandler implements RequestHandler<Map<String, Object>, String> {
@@ -26,13 +28,22 @@ public class GenerateWeeklyReportHandler implements RequestHandler<Map<String, O
 
     @Override
     public String handleRequest(Map<String, Object> event, Context context) {
-        WeeklyReport report = generateWeeklyReport.execute();
+        WeeklyReport report = referenceDateFrom(event)
+                .map(generateWeeklyReport::execute)
+                .orElseGet(generateWeeklyReport::execute);
 
         String summary = String.format(Locale.ROOT,
                 "Weekly report generated: period=%s..%s total=%d average=%.2f",
                 report.periodStart(), report.periodEnd(), report.totalFeedbacks(), report.averageScore());
         LOG.info(summary);
         return summary;
+    }
+
+    private Optional<LocalDate> referenceDateFrom(Map<String, Object> event) {
+        if (event == null || event.get("referenceDate") == null) {
+            return Optional.empty();
+        }
+        return Optional.of(LocalDate.parse(event.get("referenceDate").toString()));
     }
 
 

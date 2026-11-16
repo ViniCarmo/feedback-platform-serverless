@@ -32,8 +32,11 @@ public class GenerateWeeklyReportUseCase {
     }
 
     public WeeklyReport execute() {
-        LocalDate today = LocalDate.now(clock.withZone(zone));
-        LocalDate periodEnd = today.minusDays(1);
+        return execute(LocalDate.now(clock.withZone(zone)));
+    }
+
+    public WeeklyReport execute(LocalDate referenceDate) {
+        LocalDate periodEnd = referenceDate.minusDays(1);
         LocalDate periodStart = periodEnd.minusDays(6);
 
         List<Feedback> feedbacks = repository.findBySubmittedDateBetween(periodStart, periodEnd);

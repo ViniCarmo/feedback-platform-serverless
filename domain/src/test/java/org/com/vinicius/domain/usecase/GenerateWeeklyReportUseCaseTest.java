@@ -90,4 +90,12 @@ class GenerateWeeklyReportUseCaseTest {
         }
     }
 
+    @Test
+    void shouldGenerateReportForAGivenReferenceDate() {
+        WeeklyReport report = useCase.execute(LocalDate.of(2026, 11, 17));
+
+        assertEquals(LocalDate.of(2026, 11, 10), report.periodStart());
+        assertEquals(LocalDate.of(2026, 11, 16), report.periodEnd());
+    }
+
 }

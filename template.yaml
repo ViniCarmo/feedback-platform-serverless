@@ -59,7 +59,6 @@ Resources:
   FeedbackApi:
     Type: AWS::Serverless::Api
     Properties:
-      Name: feedback-platform-api
       StageName: prod
       Auth:
         ApiKeyRequired: true
@@ -327,7 +326,7 @@ Resources:
       MetricName: 5XXError
       Dimensions:
         - Name: ApiName
-          Value: feedback-platform-api
+          Value: !Ref AWS::StackName
       Statistic: Sum
       Period: 300
       EvaluationPeriods: 1
@@ -386,7 +385,7 @@ Resources:
                 "title": "API Gateway - Requests and errors",
                 "region": "${AWS::Region}", "stat": "Sum", "period": 300, "view": "timeSeries",
                 "metrics": [
-                  ["AWS/ApiGateway", "Count", "ApiName", "feedback-platform-api"],
+                  ["AWS/ApiGateway", "Count", "ApiName", "${AWS::StackName}"],
                   [".", "4XXError", ".", "."],
                   [".", "5XXError", ".", "."]
                 ]

@@ -174,9 +174,70 @@ Resources:
       LogGroupName: /aws/lambda/notify-critical-feedback
       RetentionInDays: 14
 
+  # ---------- Relatórios ----------
+  WeeklyReportBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: expire-old-reports
+            Status: Enabled
+            ExpirationInDays: 365
+
+  # ---------- Função: weekly-report ----------
+  GenerateWeeklyReportFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: generate-weekly-report
+      CodeUri: function-weekly-report/target/function.zip
+      Timeout: 60
+      Environment:
+        Variables:
+          FEEDBACK_TABLE_NAME: !Ref FeedbackTable
+          REPORT_BUCKET_NAME: !Ref WeeklyReportBucket
+          NOTIFICATION_SENDER_EMAIL: !Ref SenderEmail
+          NOTIFICATION_RECIPIENT_EMAILS: !Ref RecipientEmails
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: dynamodb:Query
+              Resource: !Sub ${FeedbackTable.Arn}/index/by-submitted-date
+            - Effect: Allow
+              Action: s3:PutObject
+              Resource: !Sub ${WeeklyReportBucket.Arn}/weekly-reports/*
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+                - ses:SendRawEmail
+              Resource: !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/*
+      Events:
+        WeeklySchedule:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: cron(0 8 ? * MON *)
+            ScheduleExpressionTimezone: America/Sao_Paulo
+            Description: Generates the weekly feedback report every Monday at 08:00 (Brasilia)
+
+  GenerateWeeklyReportLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/generate-weekly-report
+      RetentionInDays: 14
+
 Outputs:
   ApiUrl:
     Description: Endpoint para enviar avaliações
     Value: !Sub https://${FeedbackApi}.execute-api.${AWS::Region}.amazonaws.com/prod/avaliacao
   FeedbackTableName:
     Value: !Ref FeedbackTable
+  WeeklyReportBucketName:
+    Value: !Ref WeeklyReportBucket

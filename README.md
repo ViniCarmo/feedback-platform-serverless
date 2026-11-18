@@ -23,7 +23,6 @@ Regra de urgência: nota **0 a 3** → `CRITICAL` (dispara e-mail), **4 a 6** �
 - **Backend:** Java 21, Quarkus, Quarkus Amazon Lambda, AWS SDK for Java v2, Jackson, JUnit 5
 - **AWS:** Lambda, API Gateway, DynamoDB, SNS, SQS, SES, S3, EventBridge Scheduler, CloudWatch, IAM
 - **Infraestrutura e entrega:** AWS SAM, CloudFormation, GitHub Actions, Maven (multi-módulo)
-
 ## Estrutura do projeto
 
 ```text
@@ -59,9 +58,9 @@ O módulo `domain` não depende de nenhum framework: os casos de uso dependem ap
 ```bash
 git clone https://github.com/ViniCarmo/feedback-platform-serverless.git
 cd feedback-platform-serverless
-
+ 
 ./mvnw clean verify
-
+ 
 sam deploy --parameter-overrides "SenderEmail=<remetente>" "RecipientEmails=<destinatario>"
 ```
 
@@ -72,11 +71,11 @@ Os e-mails são parâmetros do template para não ficarem no repositório. A URL
 ```bash
 # API Key
 aws apigateway get-api-keys --include-values --query "items[0].value" --output text
-
+ 
 # Avaliação crítica (dispara o e-mail de urgência)
 curl -X POST <ApiUrl> -H "x-api-key: <API_KEY>" -H "Content-Type: application/json" \
   -d '{"descricao":"O audio cortava o tempo todo","nota":2}'
-
+ 
 # Relatório semanal sob demanda (período: 7 dias anteriores à data de referência)
 sam remote invoke GenerateWeeklyReportFunction --stack-name feedback-platform \
   --event '{"referenceDate":"2026-11-17"}'
@@ -103,7 +102,6 @@ Todo recurso da AWS é criado pelo `template.yaml`; nada foi configurado manualm
 - Criptografia em repouso no DynamoDB, S3 e SQS; bucket com **acesso público bloqueado**
 - Credenciais e e-mails fora do código (Secrets do GitHub e parâmetros do deploy)
 - Logs sem a descrição das avaliações (possível dado pessoal)
-
 ## Monitoramento
 
 CloudWatch com logs por função (retenção de 14 dias), dashboard `feedback-platform` e **5 alarmes** por e-mail:
@@ -122,8 +120,9 @@ CloudWatch com logs por função (retenção de 14 dias), dashboard `feedback-pl
 
 ## Relatório semanal agendado
 
-![Agendamento no EventBridge](docs/images/Captura%20de%20tela%202026-11-16%20222149.png)
+![Agendamento no EventBridge](docs/images/Eventbridge.png)
 
 ## Autor
 
 **Vinicius Oliveira do Carmo** · RM370572 · Pós Tech 12ADJT
+ 

@@ -125,4 +125,6 @@ CloudWatch com logs por função (retenção de 14 dias), dashboard `feedback-pl
 ## Autor
 
 **Vinicius Oliveira do Carmo** · RM370572 · Pós Tech 12ADJT
+
+**link do video: https://youtu.be/IU0HZRGVpUY
  
